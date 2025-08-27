@@ -34,6 +34,7 @@ i    : Instance { "signature": "isig" };
 g    : Global { "signature": "gsig" };
 ---
 t_bg : Texture { "signature": "tsig" };
+// later: t: TextureSlot;
 ---
 p_bg : Program {
   "vertexSignature": "vsig",
