@@ -25,6 +25,7 @@ class VertexProvider {
             throw new Error('WebGL2RenderingContext is not provided');
         }
         this.vertexProviderSignature = vertexProviderSignature;
+        this.setup();
     }
 
     vertexBuffer: WebGLBuffer | null = null;

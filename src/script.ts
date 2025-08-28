@@ -11,7 +11,7 @@ isig : InstanceSignature {
     "instancePosition": "vec2",
     "radius": "float"
   },
-  "maxCount": 64
+  "maxInstanceCount": 64
 }
 ---
 gsig : GlobalSignature {
@@ -21,11 +21,6 @@ gsig : GlobalSignature {
 tsig : TextureSignature {
   "type": "RGBA8",
   "size": [1920, 1080]
-}
----
-tsam : TextureSampler {
-  "filter": "linear",
-  "wrap": "clamp"
 }
 ---
 v    : Vertex { "signature": "vsig" };
@@ -46,7 +41,10 @@ p_bg : Program {
        gl_Position = vec4(position, 0.0, 1.0);\
     }",
   "fragmentShader": "void main(){ fragColor = texture(backgroundTexture, v_uv); }",
-  "textures": { "backgroundTexture": "tsam" }
+  "textures": { "backgroundTexture": {
+    filter: "linear",
+    wrap: "clamp"
+  } }
 };
 ---
 p_circles : Program {

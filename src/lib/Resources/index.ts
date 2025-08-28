@@ -1,5 +1,4 @@
 import { Program } from "./Program";
-import { TextureSampler } from "./TextureSampler";
 import { TextureSignature, VertexSignature, InstanceSignature, GlobalSignature } from "./SignatureResources";
 import { StaticTexture, DynamicTexture } from "./Texture";
 import { Vertex } from "./Vertex";
@@ -8,7 +7,6 @@ import { Global } from "./Global";
 
 export { 
     Program, 
-    TextureSampler, 
     TextureSignature, 
     VertexSignature,
     InstanceSignature, 
@@ -29,7 +27,6 @@ enum ResourceType {
     Global = "Global",
     Vertex = "Vertex",
     Instance = "Instance",
-    TextureSampler = "TextureSampler",
     TextureSignature = "TextureSignature",
     Program = "Program"
 }
@@ -44,7 +41,6 @@ const ResourceDict = {
     [ResourceType.Global]: Global,
     [ResourceType.Vertex]: Vertex,
     [ResourceType.Instance]: Instance,
-    [ResourceType.TextureSampler]: TextureSampler,
     [ResourceType.Program]: Program
 }
 
@@ -58,7 +54,6 @@ type ResourceClass =
     | Global
     | Vertex
     | Instance
-    | TextureSampler
     | Program;
 
 export { ResourceType };

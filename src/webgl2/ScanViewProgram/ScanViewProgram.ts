@@ -1,4 +1,4 @@
-import Program from "../../lib/WebGLHelperLib/Program";
+import Program from "../../lib/WebGLHelperLib/ProgramProvider";
 import { UniformProviderSignature } from "../../lib/WebGLHelperLib/UniformProvider";
 import { VertexProviderSignature } from "../../lib/WebGLHelperLib/VertexProvider";
 const scanViewProgram = (

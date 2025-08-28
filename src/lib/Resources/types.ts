@@ -14,7 +14,7 @@ type InstanceSignatureData = {
     attributes: {
         [key: string]: WebGLPrimitiveType;
     },
-    maxCount: number;
+    maxInstanceCount: number;
 };
 type GlobalSignatureData = {
     [key: string]: WebGLPrimitiveType;
@@ -22,10 +22,6 @@ type GlobalSignatureData = {
 type TextureSignatureData = {
     type: "RGBA8" | "RGBA32F" | "R8" | "R32F";
     size: [number, number];
-};
-type TextureSamplerData = {
-    filter: "nearest" | "linear";
-    wrap: "repeat" | "clamp";
 };
 type VertexData = {
     signature: string;
@@ -44,8 +40,13 @@ type ProgramData = {
     instanceSignature?: string;
     globalSignature?: string;
     textures: {
-        [key: string]: TextureSamplerData;
-    }
+        [key: string]: {
+            filter: "nearest" | "linear";
+            wrap: "repeat" | "clamp";
+        };
+    };
+    vertexShader: string;
+    fragmentShader: string;
 };
 type DrawOperation = {
     program: string;
@@ -66,7 +67,6 @@ export type {
     InstanceSignatureData,
     GlobalSignatureData,
     TextureSignatureData,
-    TextureSamplerData,
     VertexData,
     InstanceData,
     GlobalData,

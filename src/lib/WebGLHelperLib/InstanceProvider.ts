@@ -23,6 +23,7 @@ class InstanceProvider {
             throw new Error('WebGL2RenderingContext is not provided');
         }
         this.instanceProviderSignature = instanceProviderSignature;
+        this.setup();
     }
 
     instanceBuffer: WebGLBuffer | null = null;

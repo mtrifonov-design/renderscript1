@@ -41,6 +41,7 @@ class UniformProvider {
         }
         this.uniformProviderName = uniformProviderName;
         this.uniformStructure = uniformStructure;
+        this.setup();
     }
 
 
