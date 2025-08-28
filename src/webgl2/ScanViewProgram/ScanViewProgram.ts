@@ -1,6 +1,6 @@
-import Program from "../HelperLib/Program";
-import { UniformProviderSignature } from "../HelperLib/UniformProvider";
-import { VertexProviderSignature } from "../HelperLib/VertexProvider";
+import Program from "../../lib/WebGLHelperLib/Program";
+import { UniformProviderSignature } from "../../lib/WebGLHelperLib/UniformProvider";
+import { VertexProviderSignature } from "../../lib/WebGLHelperLib/VertexProvider";
 const scanViewProgram = (
     gl : WebGL2RenderingContext,
     uSig : UniformProviderSignature,

@@ -1,6 +1,6 @@
-import Program from "../HelperLib/Program";
-import { UniformProviderSignature } from "../HelperLib/UniformProvider";
-import VertexProvider from "../HelperLib/VertexProvider";
+import Program from "../../lib/WebGLHelperLib/Program";
+import { UniformProviderSignature } from "../../lib/WebGLHelperLib/UniformProvider";
+import VertexProvider from "../../lib/WebGLHelperLib/VertexProvider";
 
 const circleVertexSignature = {
     vertexProviderName: 'CircleVertexProvider',

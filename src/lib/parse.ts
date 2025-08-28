@@ -1,7 +1,6 @@
 import json5 from "json5";
 
 function parse(script: string) {
-
     const sections = script.split("---").map(section => {
         let firstSplit = section.split(":");
         let name = firstSplit[0].trim();
@@ -17,13 +16,12 @@ function parse(script: string) {
             const parsedJSON = json5.parse(json);
             return {
                 id: name,
-                keyword,
+                type: keyword,
                 data: parsedJSON
             }
         }
         throw new Error("Invalid section format");
     });
-
     return sections;
 };
 

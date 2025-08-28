@@ -1,12 +1,9 @@
 import script from "./script"
 import compile from "./lib/compile"
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <canvas id="mainCanvas"></canvas>
-  </div>
-`
-const gfx = compile(script);
+const canvas = document.getElementById("mainCanvas") as HTMLCanvasElement;
+const gl = canvas.getContext("webgl2");
+const gfx = compile(script,gl);
 console.log(gfx);
 
 

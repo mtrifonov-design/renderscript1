@@ -1,8 +1,8 @@
 import { Engine } from "../../core/Engine";
-import Program from "./HelperLib/Program";
-import Texture from "./HelperLib/Texture";
-import UniformProvider from "./HelperLib/UniformProvider";
-import VertexProvider from "./HelperLib/VertexProvider";
+import Program from "../lib/WebGLHelperLib/Program";
+import Texture from "../lib/WebGLHelperLib/Texture";
+import UniformProvider from "../lib/WebGLHelperLib/UniformProvider";
+import VertexProvider from "../lib/WebGLHelperLib/VertexProvider";
 import { circleProgram, circleVertexProvider } from "./CircleProgram/circleProgram";
 import { mainCanvasProgram } from "./MainCanvasProgram/MainCanvasProgram";
 import { scanViewProgram } from "./ScanViewProgram/ScanViewProgram";

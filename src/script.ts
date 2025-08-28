@@ -1,7 +1,8 @@
 const script = `
 vsig : VertexSignature {
   "attributes": { "position": "vec2" },
-  "maxCount": 1024
+  "maxCount": 1024,
+  "maxTriangleCount": 2048,
 }
 ---
 isig : InstanceSignature {
@@ -90,7 +91,6 @@ out1 : Texture {
     global: "g",
     textures: {}
   }],
-  out: true
 };
 `;
 export default script;
