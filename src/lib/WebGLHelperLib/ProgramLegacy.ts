@@ -4,7 +4,7 @@ import type { UniformProviderSignature } from "./UniformProvider";
 import UniformProvider from "./UniformProvider";
 import type { VertexProviderSignature } from "./VertexProvider";
 import VertexProvider from "./VertexProvider";
-import Texture from "./Texture";
+import Texture from "./TextureLegacy";
 
 type ProgramDescription = {
     vertexShader: string;

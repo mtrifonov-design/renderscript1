@@ -10,6 +10,7 @@ type ProgramDescription = {
     uniformProviderSignature?: UniformProviderSignature;
     vertexProviderSignature: VertexProviderSignature;
     instanceProviderSignature?: InstanceProviderSignature;
+    textureNames: string[];
 };
 
 function generateUniformBlockString(uniformProvider: UniformProviderSignature) {
@@ -61,9 +62,13 @@ class ProgramProvider {
         const fragmentShaderSource = `#version 300 es
         precision mediump float;
         precision mediump int;
+        layout(location = 0) out vec4 fragColor;
         ${this.programDescription.uniformProviderSignature?generateUniformBlockString(this.programDescription.uniformProviderSignature):''}
+        ${this.programDescription.textureNames.map(name => `uniform sampler2D ${name};`).join('\n')}
         ${this.programDescription.fragmentShader}
         `;
+
+        //console.log(vertexShaderSource);
 
         const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
         if (!vertexShader) {

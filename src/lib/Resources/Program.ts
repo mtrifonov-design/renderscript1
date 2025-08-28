@@ -14,8 +14,9 @@ export class Program extends PersistentResource {
             fragmentShader: data.fragmentShader,
             uniformProviderSignature: (() => {
                 if (data.globalSignature) {
-                    const sig = this.resources.get(data.globalSignature) as undefined | GlobalSignatureData;
-                    if (!sig) throw new Error(`Global signature ${data.globalSignature} not found for program ${id}`);
+                    const res = this.resources.get(data.globalSignature) as undefined | ResourceClass;
+                    if (!res) throw new Error(`Global signature ${data.globalSignature} not found for program ${id}`);
+                    const sig = res.data as GlobalSignatureData;
                     const uniformStructure = [];
                     for (const [name, type] of Object.entries(sig)) {
                         uniformStructure.push({ name, type });
@@ -24,8 +25,9 @@ export class Program extends PersistentResource {
                 } else return undefined;
             })(),
             vertexProviderSignature: (() => {
-                const sig = this.resources.get(data.vertexSignature) as undefined | VertexSignatureData;
-                if (!sig) throw new Error(`Vertex signature ${data.vertexSignature} not found for program ${id}`);
+                const res = this.resources.get(data.vertexSignature) as undefined | ResourceClass;
+                if (!res) throw new Error(`Vertex signature ${data.vertexSignature} not found for program ${id}`);
+                const sig = res.data as VertexSignatureData;
                 const vertexStructure = [];
                 for (const [name, type] of Object.entries(sig.attributes)) {
                     vertexStructure.push({ name, type });
@@ -38,8 +40,9 @@ export class Program extends PersistentResource {
             })(),
             instanceProviderSignature: (() => {
                 if (data.instanceSignature) {
-                    const sig = this.resources.get(data.instanceSignature) as undefined | InstanceSignatureData;
-                    if (!sig) throw new Error(`Instance signature ${data.instanceSignature} not found for program ${id}`);
+                    const res = this.resources.get(data.instanceSignature) as undefined | ResourceClass;
+                    if (!res) throw new Error(`Instance signature ${data.instanceSignature} not found for program ${id}`);
+                    const sig = res.data as InstanceSignatureData;
                     const instanceStructure = [];
                     for (const [name, type] of Object.entries(sig.attributes)) {
                         instanceStructure.push({ name, type });
@@ -49,7 +52,8 @@ export class Program extends PersistentResource {
                         maxInstanceCount: sig.maxInstanceCount
                     };
                 } else return undefined;
-            })()
+            })(),
+            textureNames: Object.keys(data.textures || {})
         });
     }
 }

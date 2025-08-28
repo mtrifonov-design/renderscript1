@@ -58,7 +58,7 @@ type DrawOperation = {
     };
 };
 type DynamicTextureData = {
-    signature: TextureSignatureData;
+    signature: string;
     drawOps: DrawOperation[];
 };
 export type {

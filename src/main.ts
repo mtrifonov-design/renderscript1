@@ -6,23 +6,40 @@ const gl = canvas.getContext("webgl2");
 const gfx = compile(script,gl);
 console.log(gfx);
 
+    const image = new Image();
+    const offscreenCanvas = document.createElement("canvas");
+    const offscreenCtx = offscreenCanvas.getContext("2d");
+    // fill with blue backbground
+    offscreenCtx.fillStyle = "blue";
+    offscreenCtx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
 
-// function setup() {
-//     gfx.setVertices("v", [
-//     { position: [-1, -1] }, { position: [ 1, -1] }, { position: [-1,  1] }, { position: [ 1,  1] },
-//     ],[
-//         1,2,3,3,2,4
-//     ]);
-//     gfx.setGlobal("g", { screenSize: [1920,1080] });
-//     gfx.setTexture("t_bg", myBackgroundImage);
-//     gfx.setScreen("out1");
-// };
+    const dataUrl = offscreenCanvas.toDataURL();
+    image.src = dataUrl;
+    image.onload = () => {
+        setup();
+        draw();
+    };
+function setup() {
+    gfx.resources.get("v").setVertices(
+        { position: [-1, -1, 1, -1, -1, 1, 1, 1] },
+        [
+            1,2,3,3,2,4
+        ],
+        2
+    );
+    gfx.resources.get("g").setGlobals({
+        screenSize: [1920, 1080]
+    });
 
-// function draw() {
-//     gfx.setInstances("i", [
-//     { col:[1,0,0,1], instancePosition:[480, 540], radius:120 },
-//     { col:[0,1,0,1], instancePosition:[960, 540], radius:120 },
-//     { col:[0,0,1,1], instancePosition:[1440,540], radius:120 },
-//     ]);
-//     gfx.out("out1").update();
-// };
+    gfx.resources.get("t_bg").setTextureData(image);
+};
+
+function draw() {
+    gfx.resources.get("i").setInstanceData([
+        { col:[1,0,0,1], instancePosition:[480, 540], radius:120 },
+        { col:[0,1,0,1], instancePosition:[960, 540], radius:120 },
+        { col:[0,0,1,1], instancePosition:[1440,540], radius:120 },
+    ]);
+    gfx.resources.get("out1").updateTextureData();
+    gfx.setScreen("out1");
+};

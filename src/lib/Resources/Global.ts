@@ -51,4 +51,11 @@ export class Global extends VariableResource {
         this.uniformProvider = new UniformProvider(gl,uniformProviderSignature);
         this.uniformProvider.setup();
     }
+    setGlobals(globals: {
+        [key: string]: number | number[];
+    }) {
+        this.uniformProvider.setUniforms(globals);
+        this.markAndPropagateDirty();
+        this.dirty = false;
+    };
 };

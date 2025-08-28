@@ -2,7 +2,7 @@ import InstanceProvider from "../WebGLHelperLib/InstanceProvider";
 import { VariableResource } from "./BaseResources";
 import type { InstanceData, InstanceSignatureData
  } from "./types";
- import { ResourceClass } from ".";
+ import type { ResourceClass } from ".";
 
 export class Instance extends VariableResource {
     type = "Instance";
@@ -31,8 +31,9 @@ export class Instance extends VariableResource {
         gl: WebGL2RenderingContext
     ) {
         super(resources,id,data,gl);
-        const sig = this.resources.get(data.signature) as undefined | InstanceSignatureData;
-        if (!sig) throw new Error("Signature not found");
+        const res = this.resources.get(data.signature) as undefined | ResourceClass;
+        if (!res) throw new Error("Signature not found");
+        const sig = res.data as InstanceSignatureData;
         const instanceProviderSignature = {
             maxInstanceCount: sig.maxInstanceCount,
             instanceProviderName: id,
@@ -46,4 +47,13 @@ export class Instance extends VariableResource {
         };
         this.instanceProvider = new InstanceProvider(gl,instanceProviderSignature);
     }
+    instanceCount = 0;
+    setInstanceData(instanceData: {
+        [key: string]: number[];
+    }, instanceCount: number) {
+        this.instanceProvider.setInstanceData(instanceData);
+        this.instanceCount = instanceCount;
+        this.markAndPropagateDirty();
+        this.dirty = false;
+    };
 };

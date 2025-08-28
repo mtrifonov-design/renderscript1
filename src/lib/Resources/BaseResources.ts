@@ -32,6 +32,15 @@ abstract class VariableResource {
         this.resources = resources;
         this.gl = gl;
     }
+    markAndPropagateDirty() {
+        this.dirty = true;
+        for (const dep of this.isDependencyOf) {
+            const resource = this.resources.get(dep);
+            if (resource && "markAndPropagateDirty" in resource) {
+                resource.markAndPropagateDirty();
+            }
+        }
+    }
 }
 
 export { VariableResource, PersistentResource };

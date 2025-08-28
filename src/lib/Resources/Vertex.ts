@@ -27,8 +27,9 @@ export class Vertex extends VariableResource {
     vertexProvider : VertexProvider;
     constructor(resources: Map<string, ResourceClass>, id: string, data: VertexData, gl: WebGL2RenderingContext) {
         super(resources, id,data, gl);
-        const sig = this.resources.get(data.signature) as undefined | VertexSignatureData;
-        if (!sig) throw new Error("Signature not found");
+        const res = this.resources.get(data.signature) as undefined | ResourceClass;
+        if (!res) throw new Error("Signature not found");
+        const sig = res.data as VertexSignatureData;
         const vertexProviderSignature = {
             maxVertexCount: sig.maxVertexCount,
             maxTriangleCount : sig.maxTriangleCount,
@@ -43,4 +44,14 @@ export class Vertex extends VariableResource {
         };
         this.vertexProvider = new VertexProvider(gl,vertexProviderSignature);
     }
+    triangleCount = 0;
+    setVertices(vertices: {
+        [key: string]: number[];
+    }, indices: number[], triangleCount: number) {
+        this.vertexProvider.setVertexData(vertices);
+        this.vertexProvider.setIndexData(indices);
+        this.triangleCount = triangleCount;
+        this.markAndPropagateDirty();
+        this.dirty = false;
+    };
 };

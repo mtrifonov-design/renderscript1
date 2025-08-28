@@ -1,6 +1,6 @@
 import { Engine } from "../../core/Engine";
 import Program from "../lib/WebGLHelperLib/ProgramProvider";
-import Texture from "../lib/WebGLHelperLib/Texture";
+import Texture from "../lib/WebGLHelperLib/TextureLegacy";
 import UniformProvider from "../lib/WebGLHelperLib/UniformProvider";
 import VertexProvider from "../lib/WebGLHelperLib/VertexProvider";
 import { circleProgram, circleVertexProvider } from "./CircleProgram/circleProgram";
