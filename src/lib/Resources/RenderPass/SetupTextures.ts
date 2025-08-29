@@ -26,6 +26,7 @@ function SetupTexture(
     program: WebGLProgram,
     slot: number
 ) {
+    //console.log("Setting up textures", textureName, textureId);
     const texture = resources.get(textureId) as undefined | DynamicTexture | StaticTexture; 
     if (!texture) throw new Error("Something went wrong.");
     if (texture.type !== "StaticTexture" && texture.type !== "DynamicTexture") throw new Error("Something went wrong.");

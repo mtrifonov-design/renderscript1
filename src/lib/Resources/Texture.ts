@@ -43,8 +43,9 @@ export class DynamicTexture extends VariableResource {
         const drawOps = this.data.drawOps;
         const dependsOn = [];
         for (const drawOp of drawOps) {
-            dependsOn.push(...Object.keys(drawOp.textures));
+            dependsOn.push(...Object.values(drawOp.textures));
         }
+        this.dependsOn = dependsOn;
 
         // compute isDependencyOf
         const dynamicTextures = Array.from(this.resources.values()).filter(r => r.type === "DynamicTexture");
@@ -80,8 +81,11 @@ export class DynamicTexture extends VariableResource {
     }
     updateTextureData() {
         if (!this.dirty) return;
+        //console.log("Updating dynamic texture", this.id);
+        //console.log(this.dependsOn);
         for (const dep of this.dependsOn) {
             const res = this.resources.get(dep) as undefined | ResourceClass;
+            //console.log(res, res?.type, res.dirty);
             if (res && res.type === "DynamicTexture" && "dirty" in res && res.dirty) {
                 (res as DynamicTexture).updateTextureData();
             }
