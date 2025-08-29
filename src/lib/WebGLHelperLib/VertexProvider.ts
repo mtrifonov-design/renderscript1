@@ -50,6 +50,7 @@ class VertexProvider {
         this.vertexStructureObject = derivedVertexStructureObject;
 
         // allocate the vertex buffer with the size of all attributes combined
+        //console.log("size", this.vertexProviderSignature.maxVertexCount * this.getBufferRowSize(this.vertexStructureObject))
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
         this.gl.bufferData(
             this.gl.ARRAY_BUFFER, 

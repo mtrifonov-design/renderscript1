@@ -1,7 +1,7 @@
 const script = `
 vsig : VertexSignature {
   "attributes": { "position": "vec2" },
-  "maxCount": 1024,
+  "maxVertexCount": 1024,
   "maxTriangleCount": 2048,
 }
 ---
@@ -43,7 +43,8 @@ p_bg : Program {
     }",
   "fragmentShader": "\
       in vec2 v_uv;\
-  void main(){ fragColor = texture(backgroundTexture, v_uv); }",
+  void main(){ outColor = texture(backgroundTexture, v_uv); \
+  }",
   "textures": { "backgroundTexture": {
     filter: "linear",
     wrap: "clamp"
@@ -71,7 +72,33 @@ p_circles : Program {
       float d = length(v_local);\
       float a = smoothstep(1.0, 0.98, d);\
       if (d>1.02) discard;\
-      fragColor = vec4(v_col.rgb, v_col.a * a);\
+      outColor = v_col;\
+    }",
+  "textures": {}
+};
+---
+p_circle : Program {
+  vertexSignature: "vsig",
+  globalSignature: "gsig",
+  vertexShader: "out vec2 v_local;\
+    out vec4 v_col;\
+    void main(){\
+      vec2 r_ndc = vec2(0.2);\
+      vec2 instancePosition = vec2(0.0);\
+      vec2 pos_ndc = instancePosition;\
+      vec2 p = pos_ndc + position * r_ndc;\
+      v_local = position; \
+      v_col = vec4(1.,0.,0.,1.);\
+      gl_Position = vec4(p, 0.0, 1.0);\
+    }",
+  fragmentShader: "\
+    in vec2 v_local;\
+    in vec4 v_col;\
+    void main(){\
+      float d = length(v_local);\
+      float a = smoothstep(1.0, 0.98, d);\
+      if (d>1.02) discard;\
+      outColor = vec4(1.,0.,0.,1.);\
     }",
   "textures": {}
 };
@@ -87,13 +114,52 @@ out1 : Texture {
   },
   {
     program: "p_circles",
+    instance: "i",
     vertex: "v",
-    instances: "i",
     global: "g",
     textures: {}
-  }],
+  }
+  ],
 };
 `;
+
+  // {
+  //   program: "p_bg",
+  //   vertex: "v",
+  //   global: "g",
+  //   textures: { backgroundTexture: "t_bg" }
+  // },
+
+// outColor = vec4(v_col.rgb, v_col.a * a);\
+
+
+// p_circles : Program {
+//   vertexSignature: "vsig",
+//   instanceSignature: "isig",
+//   globalSignature: "gsig",
+//   vertexShader: "out vec2 v_local;\
+//     out vec4 v_col;\
+//     void main(){\
+//       vec2 r_ndc = (2.0 * vec2(radius) / screenSize);\
+//       vec2 pos_ndc = (2.0 * instancePosition / screenSize) - 1.0;\
+//       vec2 p = pos_ndc + position * r_ndc;\
+//       v_local = position; \
+//       v_col = col;\
+//       gl_Position = vec4(p, 0.0, 1.0);\
+//     }",
+//   fragmentShader: "\
+//     in vec2 v_local;\
+//     in vec4 v_col;\
+//     void main(){\
+//       float d = length(v_local);\
+//       float a = smoothstep(1.0, 0.98, d);\
+//       if (d>1.02) discard;\
+//       outColor = vec4(1.,0.,0.,1.);\
+//     }",
+//   "textures": {}
+// };
+// ---
+
 export default script;
 
 

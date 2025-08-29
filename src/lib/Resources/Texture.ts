@@ -129,8 +129,12 @@ export class DynamicTexture extends VariableResource {
             SetupUniforms(this.gl, this.resources, drawOp.global, program.programProvider.program!);
         }
         // set up textures
-        SetupTextures(this.gl, this.resources, drawOp.textures, program.programProvider.program!);
+        SetupTextures(this.gl, this.resources, drawOp.textures, program.data, program.programProvider.program!);
         // perform draw call
+
+        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertex.vertexProvider.vertexBuffer);
+        // const bufferSize = this.gl.getBufferParameter(this.gl.ARRAY_BUFFER, this.gl.BUFFER_SIZE);
+        // console.log("Vertex buffer size (bytes):", bufferSize);
 
         const instanced = drawOp.instance !== undefined;
         if (instanced) {

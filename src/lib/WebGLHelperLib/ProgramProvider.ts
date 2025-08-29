@@ -34,6 +34,7 @@ function generateVertexBlockString(vertexProvider: VertexProviderSignature, inst
             block += `layout(location = ${i + vertexProvider.vertexStructure.length}) in ${instance.type} ${instance.name};\n`;
         }
     }
+    //console.log(block);
     return block;
 }
 
@@ -62,13 +63,11 @@ class ProgramProvider {
         const fragmentShaderSource = `#version 300 es
         precision mediump float;
         precision mediump int;
-        layout(location = 0) out vec4 fragColor;
+        out vec4 outColor;
         ${this.programDescription.uniformProviderSignature?generateUniformBlockString(this.programDescription.uniformProviderSignature):''}
         ${this.programDescription.textureNames.map(name => `uniform sampler2D ${name};`).join('\n')}
         ${this.programDescription.fragmentShader}
         `;
-
-        //console.log(vertexShaderSource);
 
         const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
         if (!vertexShader) {

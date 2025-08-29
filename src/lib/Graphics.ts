@@ -36,6 +36,7 @@ export default class Graphics {
     out vec4 outColor;
     void main() {
       outColor = texture(u_tex, v_uv);
+      //outColor = vec4(1.0,0.,0.,1.);
     }`;
 
             const compile = (type: number, src: string) => {
@@ -57,11 +58,16 @@ export default class Graphics {
             }
 
             const uTex = gl.getUniformLocation(prog, "u_tex")!;
-            this._blit = { prog, uTex };
+            this._blit = { prog, uTex, resourceName };
         }
 
+
+    }
+
+    refreshScreen() {
         // ---- fetch texture ----
-        const texObj = this.resources.get(resourceName);
+        const texObj = this.resources.get(this._blit.resourceName);
+        const gl = this.gl;
         if (!texObj || !texObj.textureProvider?.texture) {
             throw new Error("Missing texture resource");
         }
@@ -78,16 +84,18 @@ export default class Graphics {
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.uniform1i(this._blit.uTex, 0);
+
 
         // Optional but safe defaults (ensure you set these at texture creation/upload time):
-        // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.uniform1i(this._blit.uTex, 0);
 
         // No VAO/VBO needed; gl_VertexID drives the triangle.
         gl.drawArrays(gl.TRIANGLES, 0, 3);
+
     }
 
 }

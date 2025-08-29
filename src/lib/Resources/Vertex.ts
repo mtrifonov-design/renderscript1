@@ -42,6 +42,7 @@ export class Vertex extends VariableResource {
             })(),
             vertexProviderName: id
         };
+        //console.log("Creating vertex provider with signature:", vertexProviderSignature);
         this.vertexProvider = new VertexProvider(gl,vertexProviderSignature);
     }
     triangleCount = 0;

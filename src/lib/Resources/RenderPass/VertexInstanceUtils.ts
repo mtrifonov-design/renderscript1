@@ -26,7 +26,7 @@ export function getPropertyTypeType(type: GLSLPrimitiveType, gl: WebGL2Rendering
         case 'vec4':
             return gl.FLOAT;
         case 'int':
-            return gl.SHORT;
+            return gl.INT;
         default:
             throw new Error(`Unknown vertex type: ${type}`);
     }
