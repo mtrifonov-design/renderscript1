@@ -167,7 +167,7 @@ class VertexProvider {
         }
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         const indexData = new Uint16Array(data);
-        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, indexData, this.gl.DYNAMIC_DRAW);
+        this.gl.bufferSubData(this.gl.ELEMENT_ARRAY_BUFFER, 0, indexData);
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
     }
 }

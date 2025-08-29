@@ -23,7 +23,7 @@ function setup() {
     gfx.resources.get("v").setVertices(
         { position: [-1, -1, 1, -1, -1, 1, 1, 1] },
         [
-            1,2,3,3,2,4
+            0,1,2,2,1,3
         ],
         2
     );

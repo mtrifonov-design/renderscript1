@@ -123,6 +123,8 @@ export class DynamicTexture extends VariableResource {
 
         const program = this.resources.get(drawOp.program) as undefined | Program;
         if (!program) throw new Error("Something went wrong.");
+        this.gl.useProgram(program.programProvider.program!);
+
         if (drawOp.global) {
             SetupUniforms(this.gl, this.resources, drawOp.global, program.programProvider.program!);
         }
