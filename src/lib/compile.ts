@@ -1,4 +1,5 @@
 import parse from "./parse";
+import altParse from './altParse';
 import { ResourceDict, ResourceType  } from "./Resources";
 import Graphics from "./Graphics";
 
@@ -41,7 +42,7 @@ function processResources(unprocessedResources: UnprocessedResource[], gl: WebGL
 }
 
 function compile(script: string, gl: WebGL2RenderingContext) {
-    const unprocessedResources = parse(script);
+    const unprocessedResources = altParse(script);
     const resources = processResources(unprocessedResources,gl);
     return new Graphics(resources, gl);
 };

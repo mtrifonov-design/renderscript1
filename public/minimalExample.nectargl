@@ -1,0 +1,76 @@
+// Declare Signatures (analogous to types)
+verSig : VertexSignature {
+  attributes: { position: 'vec2' },
+  maxVertexCount: 1024,
+  maxTriangleCount: 2048,
+};
+
+texSig : TextureSignature {
+  type: 'RGBA8',
+  size: [1920, 1080],
+};
+
+// Declare input buffer objects (how data gets into the system)
+v : Vertex { signature: 'verSig' };
+bg : Texture { signature: 'texSig' };
+
+
+// describe programs
+program1 : Program {
+  vertexSignature: 'verSig',
+  vertexShader: <<<glsl
+  out vec2 v_uv;
+  void main(){
+    v_uv = 0.5 * (position + 1.0);
+    gl_Position = vec4(position, 0.0, 1.0);
+  }
+  >>>,
+  fragmentShader: <<<glsl
+  in vec2 v_uv;
+  void main(){
+    outColor = texture(backgroundTexture, v_uv);
+  }
+  >>>,
+  textures: {
+    backgroundTexture: { filter: 'linear', wrap: 'clamp' },
+  },
+};
+
+program2 : Program {
+  vertexSignature: 'verSig',
+  vertexShader: <<<glsl
+  out vec2 v_uv;
+  void main(){
+    v_uv = 0.5 * (position + 1.0);
+    gl_Position = vec4(position, 0.0, 1.0);
+  }
+  >>>,
+  fragmentShader: <<<glsl
+  in vec2 v_uv;
+  void main(){
+    float l = length(v_uv - vec2(0.5));
+    if (l > 0.1) discard;
+    outColor = vec4(1.,0.,0.,1.);
+  }
+  >>>,
+  textures: {
+    backgroundTexture: { filter: 'linear', wrap: 'clamp' },
+  },
+};
+
+// Draw onto a new texture
+out1 : Texture {
+  signature: 'texSig',
+  drawOps: [
+    {
+      program: 'program1',
+      vertex: 'v',
+      textures: { backgroundTexture: 'bg' },
+    },
+    {
+      program: 'program2',
+      vertex: 'v',
+      textures: { },
+    },
+  ],
+};
