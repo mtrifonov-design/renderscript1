@@ -164,7 +164,7 @@ function parseDeclarations(
 
   for (const part of parts) {
     // Extract name, kind, section id
-    const m = /^([A-Za-z_][\w.]*)\s*:\s*([A-Za-z_]\w*)\s*SECTION#(SECTION_\d+)\s*$/.exec(part);
+    const m = /^([A-Za-z_]\w*)\s*:\s*([A-Za-z_]\w*)\s*SECTION#(SECTION_\d+)\s*$/.exec(part);
     if (!m) {
       throw new Error(
         `Malformed declaration (expected \`name : Kind SECTION#SECTION_n\`): "${part}"`
@@ -232,3 +232,11 @@ function posToLineCol(s: string, idx: number) {
   return { line, col };
 }
 
+/* =========================
+ * Example usage (remove or adapt in your codebase)
+ * =========================
+import fs from "node:fs";
+const raw = fs.readFileSync("script.dsl", "utf8");
+const entries = parseScript(raw);
+console.log(entries);
+*/

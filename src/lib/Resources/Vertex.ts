@@ -28,6 +28,7 @@ export class Vertex extends VariableResource {
     constructor(resources: Map<string, ResourceClass>, id: string, data: VertexData, gl: WebGL2RenderingContext) {
         super(resources, id,data, gl);
         const res = this.resources.get(data.signature) as undefined | ResourceClass;
+        //console.log(data.signature);
         if (!res) throw new Error("Signature not found");
         const sig = res.data as VertexSignatureData;
         const vertexProviderSignature = {

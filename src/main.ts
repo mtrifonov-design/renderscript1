@@ -1,3 +1,4 @@
+import build from "./lib/build";
 import compile from "./lib/compile"
 const canvas = document.getElementById("mainCanvas") as HTMLCanvasElement;
 const gl = canvas.getContext("webgl2")!;
@@ -11,7 +12,10 @@ await new Promise((resolve) => {
 const renderscript = await fetch("/example.nectargl");
 const renderscriptText = await renderscript.text();
 
-const gfx = compile(renderscriptText, gl);
+const something = await build("/example/example.nectargl")
+console.log(something);
+
+const gfx = compile(something, gl);
 function setup() {
     gfx.resources.get("v").setVertices(
         { 
@@ -34,7 +38,7 @@ function setup() {
     });
 
     gfx.resources.get("t_bg").setTextureData(image);
-    gfx.setScreen("out3");
+    gfx.setScreen("blurred_out");
 };
 
 let frame = 0;
@@ -67,7 +71,7 @@ function draw() {
             ]
         }
         , 3);
-    gfx.resources.get("out3").updateTextureData();
+    gfx.resources.get("blurred_out").updateTextureData();
     gfx.refreshScreen();
     requestAnimationFrame(draw);
 };
