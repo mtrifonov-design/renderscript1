@@ -9,12 +9,12 @@ await new Promise((resolve) => {
     image.onload = resolve;
 });
 
-const something = await build("/example/example.nectargl")
+const something = await build("/cyberspaghetti/raytunnel/main.nectargl")
 console.log(something);
 
 const gfx = compile(something, gl);
 function setup() {
-    gfx.resources.get("v").setVertices(
+    gfx.resources.get("quad").setVertices(
         { 
             position: 
             [
@@ -29,46 +29,25 @@ function setup() {
         ],
         2
     );
-    gfx.resources.get("g").setGlobals({
-        screenSize: [1920, 1080],
-        blurScale: 11
-    });
+    // gfx.resources.get("g").setGlobals({
+    // });
 
-    gfx.resources.get("t_bg").setTextureData(image);
-    gfx.setScreen("blurred_out");
+    //gfx.resources.get("t_bg").setTextureData(image);
+    gfx.setScreen("out");
 };
 
 let frame = 0;
 function draw() {
     frame++;
-    const pos1 = [Math.sin(frame * 0.02) * 300 + 960, Math.cos(frame * 0.02) * 300 + 540];
-    const pos2 = [Math.sin(frame * 0.03 + 2) * 300 + 960, Math.cos(frame * 0.03 + 2) * 300 + 540];
-    const pos3 = [Math.sin(frame * 0.04 + 4) * 300 + 960, Math.cos(frame * 0.04 + 4) * 300 + 540];
-
-    gfx.resources.get("g").setGlobals({
-        screenSize: [1920, 1080],
-        blurScale: Math.sin(frame * 0.01) * 2 + 2
+    gfx.resources.get("global").setGlobals({
+        test: [0.5]
     });
-    gfx.resources.get("i").setInstanceData(
+    gfx.resources.get("ray").setInstanceData(
         {
-            col: [
-                1, 1, 0, 1, 
-                0, 1, 0, 1, 
-                0, 1, 1, 1
-            ],
-            instancePosition: [
-                ...pos1, 
-                ...pos2, 
-                ...pos3
-            ],
-            radius: [
-                50, 
-                150, 
-                50
-            ]
+            seed: [Math.random()]
         }
-        , 3);
-    gfx.resources.get("blurred_out").updateTextureData();
+        , 1);
+    gfx.resources.get("out").updateTextureData();
     gfx.refreshScreen();
     requestAnimationFrame(draw);
 };
