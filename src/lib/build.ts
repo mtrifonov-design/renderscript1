@@ -62,7 +62,7 @@ async function buildFrom(
   const pre = preprocessText(raw, namespace, slots);
 
   // Parse (using your unchanged parser)
-  const parsed = parseScript(pre);
+  const parsed = await parseScript(pre);
 
   // Expand uses recursively
   const out: ParsedEntry[] = [];

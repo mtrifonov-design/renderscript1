@@ -3,6 +3,7 @@
 // Dependencies: json5 (npm i json5)
 
 import JSON5 from "json5";
+import resolveGLSL from "./resolveGLSL";
 
 export type ParsedEntry = {
   id: string;   // e.g. "p_bg"
@@ -10,7 +11,7 @@ export type ParsedEntry = {
   data: any;      // JSON5-parsed object with GLSL fences restored
 };
 
-export default function parseScript(raw: string): ParsedEntry[] {
+export default async function parseScript(raw: string): Promise<ParsedEntry[]> {
   // 1) Strip trailing // comments, trim lines, drop empties, then rejoin
   const step1 = stripCommentsTrimAndDropEmpties(raw);
 
@@ -21,7 +22,7 @@ export default function parseScript(raw: string): ParsedEntry[] {
   const { srcOut: step3, sectionMap } = extractTopLevelSections(step2);
 
   // 4) Parse declarations "name : Kind SECTION#ID;" and JSON5-parse their bodies
-  const entries = parseDeclarations(step3, sectionMap, glslMap);
+  const entries = await parseDeclarations(step3, sectionMap, glslMap);
 
   return entries;
 }
@@ -148,11 +149,11 @@ function extractTopLevelSections(src: string): { srcOut: string; sectionMap: Sec
 /* =========================
  * 4) Declarations + JSON5
  * ========================= */
-function parseDeclarations(
+async function parseDeclarations(
   src: string,
   sectionMap: SectionMap,
   glslMap: GLSLMap
-): ParsedEntry[] {
+): Promise<ParsedEntry[]> {
   // Now we expect a sequence like:
   // name : Kind SECTION#SECTION_1;
   // name2 : Kind2 SECTION#SECTION_2;
@@ -189,7 +190,8 @@ function parseDeclarations(
     }
 
     // Replace "GLSL;ID" strings deeply with original GLSL code
-    const resolved = deepReplaceGlslPlaceholders(data, glslMap, `${name}:${kind}`);
+    let resolved = await deepReplaceGlslPlaceholders(data, glslMap, `${name}:${kind}`);
+
 
     entries.push({ id: name, type: kind, data: resolved });
   }
@@ -197,7 +199,7 @@ function parseDeclarations(
   return entries;
 }
 
-function deepReplaceGlslPlaceholders(value: any, glslMap: GLSLMap, ctx: string): any {
+async function deepReplaceGlslPlaceholders(value: any, glslMap: GLSLMap, ctx: string): Promise<any> {
   if (typeof value === "string") {
     const m = /^GLSL;([A-Za-z0-9_]+)$/.exec(value);
     if (!m) return value;
@@ -206,15 +208,15 @@ function deepReplaceGlslPlaceholders(value: any, glslMap: GLSLMap, ctx: string):
     if (code == null) {
       throw new Error(`Missing GLSL block "${id}" referenced in ${ctx}`);
     }
-    return code;
+    return await resolveGLSL(code);
   }
   if (Array.isArray(value)) {
-    return value.map((v) => deepReplaceGlslPlaceholders(v, glslMap, ctx));
+    return Promise.all(value.map((v) => deepReplaceGlslPlaceholders(v, glslMap, ctx)));
   }
   if (value && typeof value === "object") {
     const out: Record<string, any> = {};
     for (const [k, v] of Object.entries(value)) {
-      out[k] = deepReplaceGlslPlaceholders(v, glslMap, ctx);
+      out[k] = await deepReplaceGlslPlaceholders(v, glslMap, ctx);
     }
     return out;
   }

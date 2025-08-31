@@ -9,9 +9,6 @@ await new Promise((resolve) => {
     image.onload = resolve;
 });
 
-const renderscript = await fetch("/example.nectargl");
-const renderscriptText = await renderscript.text();
-
 const something = await build("/example/example.nectargl")
 console.log(something);
 

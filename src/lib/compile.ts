@@ -41,9 +41,9 @@ function processResources(unprocessedResources: UnprocessedResource[], gl: WebGL
     return resources;
 }
 
-function compile(script: string | any[], gl: WebGL2RenderingContext) {
-    const unprocessedResources = typeof script === "string"  ? altParse(script) : script;
-    const resources = processResources(unprocessedResources,gl);
+function compile(script: any[], gl: WebGL2RenderingContext) {
+    //const unprocessedResources = typeof script === "string"  ? altParse(script) : script;
+    const resources = processResources(script,gl);
     return new Graphics(resources, gl);
 };
 

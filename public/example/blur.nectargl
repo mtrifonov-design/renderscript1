@@ -42,6 +42,7 @@ p_blurY : Program {
   }
   >>>,
   fragmentShader: <<<glsl
+  #include "/example/blurex.glsl";
   in vec2 v_uv;
   void main(){
     float w0 = 0.227027;
@@ -49,7 +50,7 @@ p_blurY : Program {
     float w2 = 0.1216216;
     float w3 = 0.05405405;
     float w4 = 0.016216216;
-    vec2 texel = vec2(0.0, blurScale / screenSize.y);
+    vec2 texel = example(blurScale,screenSize);
 
     vec4 c = texture(src, v_uv) * w0;
     c += texture(src, v_uv + 1.0 * texel) * w1 + texture(src, v_uv - 1.0 * texel) * w1;
