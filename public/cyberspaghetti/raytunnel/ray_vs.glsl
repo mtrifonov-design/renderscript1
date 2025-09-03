@@ -55,6 +55,7 @@ struct ParticleParams {
     float angle;
     float ray_length_variation_factor;
     float ray_thickness_variation_factor;
+    float texture_sample_factor;
 };
 
 ParticleParams ppar_for(uint instance_key, float frame, float lifecycle) {
@@ -66,12 +67,15 @@ ParticleParams ppar_for(uint instance_key, float frame, float lifecycle) {
     float angle = mix(0.,360.,u01(stream(uvec3(instance_key, incarnation, 1u))));
     float ray_length_variation = u01(stream(uvec3(instance_key, incarnation, 2u)));
     float ray_thickness_variation = u01(stream(uvec3(instance_key, incarnation, 3u)));
-    return ParticleParams(progress, incarnation, angle, ray_length_variation, ray_thickness_variation);
+    float texture_sample_factor = u01(stream(uvec3(instance_key, incarnation, 4u)));
+    return ParticleParams(progress, incarnation, angle, ray_length_variation, ray_thickness_variation, texture_sample_factor);
 }
 
 
 
 out vec2 uv;
+out float texture_sample_factor;
+out float progress_factor;
 void main() {
 
     uint instance_key = uint(gl_InstanceID);
@@ -99,4 +103,6 @@ void main() {
     int idx = positionToIndex(position);
     gl_Position = p * rayPositions[idx];
     uv = (position / vec2(2.0, 2.0)) + vec2(0.5);
+    texture_sample_factor = ppar.texture_sample_factor;
+    progress_factor = ppar.progress;
 }
