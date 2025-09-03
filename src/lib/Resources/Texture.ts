@@ -103,10 +103,40 @@ export class DynamicTexture extends VariableResource {
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.textureProvider.framebuffer);
         this.gl.clearColor(0, 0, 0, 1);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+        this.gl.disable(this.gl.DEPTH_TEST);
+        this.gl.enable(this.gl.BLEND);
 
         for (const drawOp of this.data.drawOps) {
+            if (drawOp.blend) {
+                if (typeof drawOp.blend == "string") {
+                    switch (drawOp.blend) {
+                        case "add":
+                            this.gl.blendFunc(this.gl.ONE, this.gl.ONE);
+                            break;
+                        case "subtract":
+                            this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+                            break;
+                        case "multiply":
+                            this.gl.blendFunc(this.gl.DST_COLOR, this.gl.ZERO);
+                            break;
+                        case "screen":
+                            this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+                            break;
+                        case "overlay":
+                            this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+                            break;
+                        default:
+                            throw new Error("blend mode not recognised");
+                    }
+                }
+
+            } else {
+                this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+            }
             this.performDrawOp(drawOp);
         }
+
+        this.gl.disable(this.gl.BLEND);
     }
 
     performDrawOp(drawOp : DrawOperation) {

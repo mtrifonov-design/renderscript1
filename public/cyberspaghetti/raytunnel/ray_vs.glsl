@@ -6,10 +6,12 @@ float radius2 = 0.5;
 #include "/cyberspaghetti/raytunnel/randomness.glsl";
 
 float angle = 90.;
-float ray_length = 1.;
+//float ray_length = .5;
+float ray_length_variation = 0.25;
 float ray_progress = .5;
-float ray_thickness = 0.01;
-float lifecycle = 50.;
+//float ray_thickness = 0.02;
+float ray_thickness_variation = .25;
+float lifecycle = 120.;
 
 mat4 generateRayPositions(float nCD, float nCR, float fCD, float fCR, float angle, float ray_length, float ray_progress, float ray_thickness) {
     vec3 nearPoint = vec3(nCR * sin(radians(angle)), nCR * cos(radians(angle)), nCD);
@@ -51,17 +53,23 @@ struct ParticleParams {
     float progress;
     uint incarnation;
     float angle;
+    float ray_length_variation_factor;
+    float ray_thickness_variation_factor;
 };
 
 ParticleParams ppar_for(uint instance_key, float frame, float lifecycle) {
     float offset = u01(stream(uvec3(instance_key, 0u, 0u)));
-    float startFrame = -(floor(offset * lifecycle));
+    float startFrame = -((offset * lifecycle));
     float elapsedFrames = frame - startFrame;
     uint incarnation = uint(floor(elapsedFrames / lifecycle));
     float progress = fract(elapsedFrames / lifecycle);
     float angle = mix(0.,360.,u01(stream(uvec3(instance_key, incarnation, 1u))));
-    return ParticleParams(progress, incarnation, angle);
+    float ray_length_variation = u01(stream(uvec3(instance_key, incarnation, 2u)));
+    float ray_thickness_variation = u01(stream(uvec3(instance_key, incarnation, 3u)));
+    return ParticleParams(progress, incarnation, angle, ray_length_variation, ray_thickness_variation);
 }
+
+
 
 out vec2 uv;
 void main() {
@@ -77,7 +85,15 @@ void main() {
     mat4 r = rotation(vec3(.0, 1.0, 0.0), 15.0);
     mat4 p = perspective_projection(16.0/9.0, 45.0, -nearCircleDistance, -farCircleDistance);
     //gl_Position = p * r * vec4(position, -5.0, 1.0);
-    mat4 rayPositions = generateRayPositions(nearCircleDistance, nearCircleRadius, farCircleDistance, farCircleRadius, ppar.angle, ray_length, ppar.progress, ray_thickness);
+
+
+    float ray_length = rayData.x;
+    float ray_thickness = rayData.y;
+
+
+    float final_ray_length = clamp(ray_length * (1.0 + ppar.ray_length_variation_factor * ray_length_variation - ray_length_variation / 2.),0.,1.);
+    float final_ray_thickness = clamp(ray_thickness * (1.0 + ppar.ray_thickness_variation_factor * ray_thickness_variation - ray_thickness_variation / 2.),0.,1.);
+    mat4 rayPositions = generateRayPositions(nearCircleDistance, nearCircleRadius, farCircleDistance, farCircleRadius, ppar.angle, final_ray_length, ppar.progress, final_ray_thickness);
 
     //mat4 rayPositions = debugPositions();
     int idx = positionToIndex(position);

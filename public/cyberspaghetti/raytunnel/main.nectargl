@@ -1,5 +1,6 @@
 global_sig : GlobalSignature {
     tunnelData: 'vec4',
+    rayData: 'vec4',
     time: 'float',
 };
 ray_sig : InstanceSignature {
@@ -49,6 +50,7 @@ out : Texture {
             instance: <ray>,
             global: <global>,
             textures: {},
+            blend: "add",
         }
     ],
 };

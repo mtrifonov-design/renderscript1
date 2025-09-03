@@ -69,20 +69,63 @@ function setup() {
         },
         label: "Time"
     });
+    inputs.farDistance = createSlider({
+        min: -100,
+        max: -1,
+        value: -10,
+        step: 1,
+        onChange: (value) => {
+            inputs.farDistance.value = value;
+        },
+        label: "Far Distance"
+    });
+    inputs.rayLength = createSlider({
+        min: 0.01,
+        max: 1,
+        value: 0.5,
+        step: 0.01,
+        onChange: (value) => {
+            inputs.rayLength.value = value;
+        },
+        label: "Ray Length"
+    });
+    inputs.rayThickness = createSlider({
+        min: 0.01,
+        max: 0.1,
+        value: 0.05,
+        step: 0.001,
+        onChange: (value) => {
+            inputs.rayThickness.value = value;
+        },
+        label: "Ray Thickness"
+    });
+    inputs.numberOfRays = createSlider({
+        min: 1,
+        max: 100000,
+        value: 100,
+        step: 1,
+        onChange: (value) => {
+            inputs.numberOfRays.value = value;
+        },
+        label: "Number of Rays"
+    });
 
 
 };
 
-const instances = [];
-for (let i = 0; i < 10000; i++) {
-    instances.push(Math.random());
-}
+let instances = [];
+
 
 let frame = 0;
 function draw() {
+    instances = [];
+    for (let i = 0; i < inputs.numberOfRays.value ; i++) {
+        instances.push(Math.random());
+    }
     frame++;
     gfx.resources.get("global").setGlobals({
-        tunnelData: [-0.1, Math.sqrt(0.5), -10.0, 0.1],
+        tunnelData: [-0.1, Math.sqrt(0.5), inputs.farDistance.value, 0.1],
+        rayData: [inputs.rayLength.value, inputs.rayThickness.value, 0.2, 0.2],
         time: [inputs.time.value]
     });
     gfx.resources.get("ray").setInstanceData(
