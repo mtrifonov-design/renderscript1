@@ -34,9 +34,11 @@ abstract class VariableResource {
     }
     markAndPropagateDirty() {
         this.dirty = true;
+        //console.log(this.id,this.isDependencyOf)
         for (const dep of this.isDependencyOf) {
             const resource = this.resources.get(dep);
             if (resource && "markAndPropagateDirty" in resource) {
+                //console.log("marking dirty", resource.id);  
                 resource.markAndPropagateDirty();
             }
         }

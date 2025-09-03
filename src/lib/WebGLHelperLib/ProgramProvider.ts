@@ -86,11 +86,13 @@ class ProgramProvider {
         }
         this.gl.shaderSource(fragmentShader, fragmentShaderSource);
         this.gl.compileShader(fragmentShader);
+
         if (!this.gl.getShaderParameter(fragmentShader, this.gl.COMPILE_STATUS)) {
             const error = this.gl.getShaderInfoLog(fragmentShader);
             this.gl.deleteShader(fragmentShader);
             throw new Error(`Fragment shader compilation failed: ${error}`);
         }
+       
         this.program = this.gl.createProgram();
         if (!this.program) {
             throw new Error('Failed to create program');

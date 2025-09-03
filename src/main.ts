@@ -9,7 +9,7 @@ await new Promise((resolve) => {
     image.onload = resolve;
 });
 
-const something = await build("/cyberspaghetti/raytunnel/main.nectargl")
+const something = await build("/cyberspaghetti/main.nectargl")
 console.log(something);
 
 
@@ -35,7 +35,7 @@ function createSlider({ min, max, value, step, onChange, label }) {
 const gfx = compile(something, gl);
 const inputs = {};
 function setup() {
-    gfx.resources.get("quad").setVertices(
+    gfx.resources.get("raytunnel_quad").setVertices(
         { 
             position: 
             [
@@ -55,6 +55,22 @@ function setup() {
 
     //gfx.resources.get("t_bg").setTextureData(image);
     gfx.setScreen("out");
+
+    gfx.resources.get("v").setVertices(
+        { 
+            position: 
+            [
+                -1, -1, 
+                 1, -1, 
+                -1,  1, 
+                 1,  1
+            ] 
+        },
+        [
+            0, 1, 2, 2, 1, 3
+        ],
+        2
+    );
 
     // Add inputs.
 
@@ -118,6 +134,16 @@ function setup() {
             inputs.colorVarianceFactor.value = value;
         },
         label: "Color Variance Factor"
+    });
+    inputs.glow = createSlider({
+        min: 0,
+        max: 5,
+        value: 0.5,
+        step: 0.01,
+        onChange: (value) => {
+            inputs.glow.value = value;
+        },
+        label: "Glow"
     });
 
 
@@ -207,14 +233,18 @@ function draw() {
         instances.push(Math.random());
     }
     frame++;
-    gfx.resources.get("colorTex").setTextureData(colorBuffer);
-    gfx.resources.get("global").setGlobals({
+    gfx.resources.get("g").setGlobals({
+        screenSize: [canvas.width, canvas.height],
+        blurScale: [inputs.glow.value]
+    });
+    gfx.resources.get("raytunnel_colorTex").setTextureData(colorBuffer);
+    gfx.resources.get("raytunnel_global").setGlobals({
         tunnelData: [-0.1, Math.sqrt(0.5), inputs.farDistance.value, 0.],
         rayData: [inputs.rayLength.value, inputs.rayThickness.value, 0.2, 0.2],
         time: [inputs.time.value],
         colorVarianceFactor: [inputs.colorVarianceFactor.value]
     });
-    gfx.resources.get("ray").setInstanceData(
+    gfx.resources.get("raytunnel_ray").setInstanceData(
         {
             seed: instances
         }

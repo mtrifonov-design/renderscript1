@@ -49,11 +49,15 @@ export class DynamicTexture extends VariableResource {
 
         // compute isDependencyOf
         const dynamicTextures = Array.from(this.resources.values()).filter(r => r.type === "DynamicTexture");
+        //console.log("self",this.id)
         for (const texture of dynamicTextures) {
             let isDependencyOf = false;
+            //console.log(texture.id)
             const textureDrawOps = texture.data.drawOps;
             for (const drawOp of textureDrawOps) {
-                if (this.id in Object.keys(drawOp.textures)) {
+                //console.log(Object.values(drawOp.textures))
+                //console.log(Object.values(drawOp.textures).includes(this.id))
+                if (Object.values(drawOp.textures).includes(this.id)) {
                     isDependencyOf = true;
                     break;
                 }
@@ -62,6 +66,7 @@ export class DynamicTexture extends VariableResource {
                 this.isDependencyOf.push(texture.id);
             }
         }
+        //console.log("done",this.isDependencyOf)
     };
     textureProvider: TextureProvider;
     constructor(resources: Map<string, ResourceClass>,
@@ -71,6 +76,7 @@ export class DynamicTexture extends VariableResource {
     ) {
         super(resources,id,data,gl);
         const res = this.resources.get(this.data.signature) as undefined | ResourceClass;
+        console.log(id)
         if (!res) throw new Error("Missing signature data");
         const sig = res.data as TextureSignatureData;
         this.textureProvider = new TextureProvider(gl, {
@@ -80,6 +86,7 @@ export class DynamicTexture extends VariableResource {
         })
     }
     updateTextureData() {
+        //console.log(this.dirty, this.id)
         if (!this.dirty) return;
         //console.log("Updating dynamic texture", this.id);
         //console.log(this.dependsOn);
@@ -95,6 +102,7 @@ export class DynamicTexture extends VariableResource {
     }
 
     performRenderPass() {
+        //console.log("Performing render pass for", this.id);
         // Set up the texture we're drawing into.
         const res = this.resources.get(this.data.signature) as undefined | ResourceClass;
         if (!res) throw new Error("Missing signature data");
