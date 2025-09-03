@@ -1,5 +1,6 @@
 global_sig : GlobalSignature {
-    test: 'float',
+    tunnelData: 'vec4',
+    time: 'float',
 };
 ray_sig : InstanceSignature {
     attributes: {
