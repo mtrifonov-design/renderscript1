@@ -137,13 +137,33 @@ function setup() {
     });
     inputs.glow = createSlider({
         min: 0,
-        max: 5,
+        max: 15,
         value: 0.5,
         step: 0.01,
         onChange: (value) => {
             inputs.glow.value = value;
         },
         label: "Glow"
+    });
+    inputs.innerRadius = createSlider({
+        min: 0,
+        max: 1,
+        value: 0.5,
+        step: 0.01,
+        onChange: (value) => {
+            inputs.innerRadius.value = value;
+        },
+        label: "Inner Radius"
+    });
+    inputs.chaos = createSlider({
+        min: 0,
+        max: 1,
+        value: 0.5,
+        step: 0.01,
+        onChange: (value) => {
+            inputs.chaos.value = value;
+        },
+        label: "Chaos"
     });
 
 
@@ -239,10 +259,11 @@ function draw() {
     });
     gfx.resources.get("raytunnel_colorTex").setTextureData(colorBuffer);
     gfx.resources.get("raytunnel_global").setGlobals({
-        tunnelData: [-0.1, Math.sqrt(0.5), inputs.farDistance.value, 0.],
+        tunnelData: [-0.1, Math.sqrt(0.5), inputs.farDistance.value, inputs.innerRadius.value],
         rayData: [inputs.rayLength.value, inputs.rayThickness.value, 0.2, 0.2],
         time: [inputs.time.value],
-        colorVarianceFactor: [inputs.colorVarianceFactor.value]
+        colorVarianceFactor: [inputs.colorVarianceFactor.value],
+        chaos: [inputs.chaos.value]
     });
     gfx.resources.get("raytunnel_ray").setInstanceData(
         {

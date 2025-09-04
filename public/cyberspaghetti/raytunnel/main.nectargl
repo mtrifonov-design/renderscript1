@@ -3,6 +3,7 @@ global_sig : GlobalSignature {
     rayData: 'vec4',
     time: 'float',
     colorVarianceFactor: 'float',
+    chaos: 'float',
 };
 ray_sig : InstanceSignature {
     attributes: {
